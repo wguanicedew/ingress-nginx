@@ -474,6 +474,10 @@ cmake -DCMAKE_BUILD_TYPE=Release \
 make
 make install
 
+# allow proxy certs
+cd "$BUILD_PATH"
+git clone https://baltig.infn.it/storm2/ngx_http_voms_module.git
+
 # Get Brotli source and deps
 cd "$BUILD_PATH"
 git clone --depth=1 https://github.com/google/ngx_brotli.git
@@ -634,6 +638,7 @@ WITH_MODULES=" \
   --add-module=$BUILD_PATH/stream-lua-nginx-module-$LUA_STREAM_NGX_VERSION \
   --add-module=$BUILD_PATH/lua-upstream-nginx-module-$LUA_UPSTREAM_VERSION \
   --add-module=$BUILD_PATH/nginx_ajp_module-${NGINX_AJP_VERSION} \
+  --add-module=$BUILD_PATH/ngx_http_voms_module \
   --add-dynamic-module=$BUILD_PATH/nginx-http-auth-digest-$NGINX_DIGEST_AUTH \
   --add-dynamic-module=$BUILD_PATH/nginx-influxdb-module-$NGINX_INFLUXDB_VERSION \
   --add-dynamic-module=$BUILD_PATH/nginx-opentracing-$NGINX_OPENTRACING_VERSION/opentracing \
