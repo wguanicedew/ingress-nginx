@@ -59,11 +59,11 @@ jobs:
       - name: Build and push image
         run: |
           export ARCH=amd64
-          export REGISTRY=${{ env.REGISTRY }}
+          export REGISTRY=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           make build image
-          SHELL="/bin/bash -o pipefail -o errexit"
-          TAG ?= $(shell cat TAG)
-          docker push ${{ env.REGISTRY }}/controller:$(TAG)
+          TAG=$(cat TAG)
+          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/controller:$(TAG) ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-controller:$(TAG)
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-controller:$(TAG)
           
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
