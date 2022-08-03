@@ -51,28 +51,37 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: Build application
+      # - name: Build application
+      #   run: |
+      #     export ARCH=amd64
+      #     make build
+          
+      - name: Build and push image
         run: |
           export ARCH=amd64
-          make build
+          export REGISTRY=${{ env.REGISTRY }}
+          make build image
+          SHELL="/bin/bash -o pipefail -o errexit"
+          TAG ?= $(shell cat TAG)
+          docker push ${{ env.REGISTRY }}/controller:$(TAG)
           
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
-      - name: Build and push Docker image
-        id: build-and-push
-        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-        with:
-          context: ./rootfs/
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-              export ARCH=amd64
-              BASE_IMAGE ?= $(shell cat NGINX_BASE)
-              VERSION ?= $(shell cat TAG)
-              TARGETARCH=amd64
-              COMMIT_SHA ?= git-$(shell git rev-parse --short HEAD)
-              BUILD_ID ?= "UNSET"
+      # - name: Build and push Docker image
+      #   id: build-and-push
+      #   uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+      #   with:
+      #     context: ./rootfs/
+      #     push: ${{ github.event_name != 'pull_request' }}
+      #     tags: ${{ steps.meta.outputs.tags }}
+      #     labels: ${{ steps.meta.outputs.labels }}
+      #     build-args: |
+      #         export ARCH=amd64
+      #         BASE_IMAGE ?= $(shell cat NGINX_BASE)
+      #         VERSION ?= $(shell cat TAG)
+      #         TARGETARCH=amd64
+      #         COMMIT_SHA ?= git-$(shell git rev-parse --short HEAD)
+      #         BUILD_ID ?= "UNSET"
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
