@@ -477,7 +477,8 @@ make install
 # allow proxy certs
 cd "$BUILD_PATH"
 # git clone https://baltig.infn.it/storm2/ngx_http_voms_module.git
-git clone https://github.com/wguanicedew/ngx_http_ssl_extension_module.git
+# git clone https://github.com/wguanicedew/ngx_http_ssl_extension_module.git
+git clone -b without_directives https://github.com/wguanicedew/ngx_http_ssl_extension_module.git
 
 # Get Brotli source and deps
 cd "$BUILD_PATH"
