@@ -66,7 +66,9 @@ jobs:
           export ARCH=amd64
           export REGISTRY=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           make build image
+          echo docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/controller:${{ env.TAG_VERSION }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-controller:${{ env.TAG_VERSION }}
           docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/controller:${{ env.TAG_VERSION }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-controller:${{ env.TAG_VERSION }}
+          echo docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-controller:${{ env.TAG_VERSION }}
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-controller:${{ env.TAG_VERSION }}
           
       # Build and push Docker image with Buildx (don't push on PR)
